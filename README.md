@@ -29,24 +29,24 @@ You can also find support via our IRC channels: `#PyLink @ irc.overdrivenetworks
 
 ### Installing from source
 
-First, make sure the following dependencies are met:
+1) First, make sure the following dependencies are met:
 
-* Python 3.4+
-* Setuptools (`pip3 install setuptools`)
-* PyYAML (`pip3 install pyyaml`)
-* ircmatch (`pip3 install ircmatch`)
-* *For password encryption*: Passlib (`pip3 install passlib`)
-* *For the servprotect plugin*: expiringdict (install this from [source](https://github.com/mailgun/expiringdict); installation is broken in pip due to [mailgun/expiringdict#13](https://github.com/mailgun/expiringdict/issues/13))
+    * Python 3.4+
+    * Setuptools (`pip3 install setuptools`)
+    * PyYAML (`pip3 install pyyaml`)
+    * ircmatch (`pip3 install ircmatch`)
+    * *For password encryption*: Passlib (`pip3 install passlib`)
+    * *For the servprotect plugin*: expiringdict (install this from [source](https://github.com/mailgun/expiringdict); installation is broken in pip due to [mailgun/expiringdict#13](https://github.com/mailgun/expiringdict/issues/13))
 
-1) Clone the repository: `git clone https://github.com/GLolol/PyLink && cd PyLink`
+2) Clone the repository: `git clone https://github.com/GLolol/PyLink && cd PyLink`
 
-2) Pick your branch.
-* By default you'll be on the **master** (stable) branch, which is bugfix only for the most part (except when a new stable release is introduced).
-* However, new features or more intensive bug fixes may not always be included. Instead, the **devel** (pre-release) branch is where active development goes, and it can be accessed by running `git checkout devel` in your Git tree.
+3) Pick your branch.
+    * By default you'll be on the **master** (stable) branch, which is mostly bugfix only (except when a new stable release is introduced). This means that new features or more intensive bug fixes may not always be included.
+    * Instead, the **devel** (pre-release) branch is where active development goes, and it can be accessed by running `git checkout devel` in your Git tree.
 
-3) Install PyLink using `python3 setup.py install` (global install) or `python3 setup.py install --user` (local install)
-* Note: `--user` is a *literal* string; *do not* replace it with your username.
-*  **Whenever you switch branches or update PyLink's sources via `git pull`, you will need to re-run this command for changes to apply!**
+4) Install PyLink using `python3 setup.py install` (global install) or `python3 setup.py install --user` (local install)
+    * Note: `--user` is a *literal* string; *do not* replace it with your username.
+    *  **Whenever you switch branches or update PyLink's sources via `git pull`, you will need to re-run this command for changes to apply!**
 
 ### Installing via PyPI (stable branch only)
 1) Make sure you're running the right pip command: on most distros, pip for Python 3 uses the command `pip3`.
@@ -85,14 +85,14 @@ Unofficial Ubuntu packages for PyLink are available via two PPAs for Ubuntu 14.0
 
 These IRCds (in alphabetical order) are frequently tested and well supported. If any issues occur, please file a bug on the issue tracker.
 
-* [charybdis](http://charybdis.io/) (3.5+) - module `ts6`
+* [charybdis](https://github.com/charybdis-ircd/charybdis) (3.5+) - module `ts6`
 * [InspIRCd](http://www.inspircd.org/) 2.0.x - module `inspircd`
     - For vHost setting to work, `m_chghost.so` must be loaded.
     - Supported channel, user, and prefix modes are negotiated on connect, but hotloading modules that change these is not supported. After changing module configuration, it is recommended to SQUIT PyLink to force a protocol renegotiation.
-* [Nefarious IRCu](https://github.com/evilnet/nefarious2) (2.0.0+) - module `nefarious`
+* [Nefarious IRCu](https://github.com/evilnet/nefarious2) (2.0.0+) - module `p10`
     - Note: Both account cloaks (user and oper) and hashed IP cloaks are optionally supported (HOST_HIDING_STYLE settings 0 to 3). Make sure you configure PyLink to match your IRCd settings.
 * [UnrealIRCd](https://www.unrealircd.org/) 4.x - module `unreal`
-    - Linking to UnrealIRCd 3.2 servers is only possible when using an UnrealIRCd 4.x server as a hub, with topology such as  `pylink<->unreal4<->unreal3.2`. We nevertheless encourage you to upgrade so all your IRCds are running the same version.
+    - Linking to UnrealIRCd 3.2 servers is only possible when using an UnrealIRCd 4.x server as a hub, with topology such as `pylink<->unreal4<->unreal3.2`. We nevertheless encourage you to upgrade so all your IRCds are running the same version.
 
 ### Extended support
 
@@ -105,7 +105,11 @@ Support for these IRCds exist, but are not tested as frequently and thoroughly. 
 * [ircd-ratbox](http://www.ratbox.org/) (3.x) - module `ratbox`
     - Host changing is not supported on ircd-ratbox.
     - On ircd-ratbox, all known IPs of users will be shown in `/whois`, even if the client is a cloaked relay client: if you're paranoid about this, turn off Relay IP forwarding by setting the `relay_no_ips` option in the ratbox network's `server:` block.
+* [IRCu](http://coder-com.undernet.org/) (u2.10.12.16+) - module `p10`
+    - Host changing is not supported.
 * [juno-ircd](https://github.com/cooper/yiria) (11.x / janet) - module `ts6` (see [configuration example](https://github.com/cooper/juno/blob/master/doc/ts6.md#pylink))
+* [snircd](https://development.quakenet.org/) (1.3.x+) - module `p10`
+    - Outbound host changing (i.e. for the `changehost` plugin) is not supported on P10 variants other than Nefarious.
 
 Other TS6 and P10 variations may work, but are not officially supported.
 
