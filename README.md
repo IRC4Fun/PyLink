@@ -36,13 +36,13 @@ You can also find support via our IRC channels: `#PyLink @ irc.overdrivenetworks
     * PyYAML (`pip3 install pyyaml`)
     * ircmatch (`pip3 install ircmatch`)
     * *For password encryption*: Passlib (`pip3 install passlib`)
-    * *For the servprotect plugin*: expiringdict (install this from [source](https://github.com/mailgun/expiringdict); installation is broken in pip due to [mailgun/expiringdict#13](https://github.com/mailgun/expiringdict/issues/13))
+    * *For the servprotect plugin*: expiringdict (`pip3 install expiringdict`)
 
 2) Clone the repository: `git clone https://github.com/GLolol/PyLink && cd PyLink`
 
 3) Pick your branch.
-    * By default you'll be on the **master** (stable) branch, which is mostly bugfix only (except when a new stable release is introduced). This means that new features or more intensive bug fixes may not always be included.
-    * Instead, the **devel** (pre-release) branch is where active development goes, and it can be accessed by running `git checkout devel` in your Git tree.
+    * By default you'll be on the **master** branch, which contains the latest stable code. This branch is recommended for production networks that don't require new features or intensive bug fixes as they are developed.
+    * The **devel** branch is where active development goes, and it can be accessed by running `git checkout devel` in your Git tree.
 
 4) Install PyLink using `python3 setup.py install` (global install) or `python3 setup.py install --user` (local install)
     * Note: `--user` is a *literal* string; *do not* replace it with your username.
@@ -55,20 +55,11 @@ You can also find support via our IRC channels: `#PyLink @ irc.overdrivenetworks
 
 3) Download or copy https://github.com/GLolol/PyLink/blob/master/example-conf.yml for an example configuration.
 
-### Installing via Debian APT repository (8/Jessie+ and above)
-
-[The Utopia Repository](https://packages.overdrivenetworks.com/) hosts unofficial Debian packages for PyLink, which are available for Jessie and Stretch/unstable. Two versions of the `pylink` package are available:
-
-- The latest stable release and its dependencies are available in the `main` section of the corresponding Debian version (e.g. [`jessie/main`)](https://packages.overdrivenetworks.com/jessie_list.html).
-- Nightly builds of the PyLink `devel` branch are available in the corresponding `nightlies` section (e.g. [`jessie-nightlies/main`](https://packages.overdrivenetworks.com/jessie-nightlies_list.html))
-
-See https://packages.overdrivenetworks.com/ for setup instructions.
-
-Upon installing `pylink`, example configuration and docs will be in `/usr/share/doc/pylink/examples` and `/usr/share/doc/pylink/docs` respectively. You can also install a local copy of the [PyLink API reference](https://pylink.github.io/) through the `pylink-doc` package.
-
 ### Installing via Ubuntu PPA (14.04/Trusty and above)
 
-Unofficial Ubuntu packages for PyLink are available via two PPAs for Ubuntu 14.04 LTS (trusty) and above. Like with the Debian installation, example configuration and docs will be in `/usr/share/doc/pylink/examples` and `/usr/share/doc/pylink/docs` respectively.
+Unofficial Ubuntu packages for PyLink are available via two PPAs for Ubuntu 14.04 LTS (trusty) and above.
+
+Upon installing the `pylink` package, example configuration and docs will be in `/usr/share/doc/pylink/examples` and `/usr/share/doc/pylink/docs` respectively. You can also install a local copy of the [PyLink API reference](https://pylink.github.io/) through the `pylink-doc` package.
 
 - Stable releases: [PyLink Stable PPA](https://launchpad.net/~tacocat/+archive/ubuntu/pylink)
 - Nightly builds (devel branch): [PyLink Nightly Builds PPA](https://launchpad.net/~tacocat/+archive/ubuntu/pylink-nightly)
