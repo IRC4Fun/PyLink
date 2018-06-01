@@ -29,11 +29,12 @@ with open('__init__.py', 'w') as f:
     f.write('__version__ = %r\n' % version)
     f.write('real_version = %r\n' % real_version)
 
+# Convert Markdown to RST for PyPI
 try:
-    with open('README.md') as f:
-        long_description = f.read()
-except OSError:
-    print('WARNING: Failed to read readme, skipping writing long_description')
+    import pypandoc
+    long_description = pypandoc.convert('README.md', 'rst', format='markdown_github')
+except ImportError:
+    print('WARNING: PyPandoc not available; skipping writing long description.')
     long_description = None
 
 setup(
@@ -42,7 +43,6 @@ setup(
 
     description='PyLink IRC Services',
     long_description=long_description,
-    long_description_content_type='text/markdown',
 
     url='https://github.com/GLolol/PyLink',
 
@@ -50,12 +50,12 @@ setup(
     author='James Lu',
     author_email='james@overdrivenetworks.com',
 
-    # License
+    # Choose your license
     license='MPL 2.0',
 
     # See https://pypi.python.org/pypi?%3Aaction=list_classifiers
     classifiers=[
-        'Development Status :: 5 - Production/Stable',
+        'Development Status :: 4 - Beta',
 
         'Intended Audience :: Developers',
         'Intended Audience :: System Administrators',
@@ -72,7 +72,6 @@ setup(
         'Programming Language :: Python :: 3 :: Only',
         'Programming Language :: Python :: 3.4',
         'Programming Language :: Python :: 3.5',
-        'Programming Language :: Python :: 3.6',
     ],
 
     keywords='IRC services relay',
@@ -80,7 +79,6 @@ setup(
 
     extras_require={
         'password-hashing': ['passlib'],
-        'cron-support': ['psutil'],
         'servprotect': ['expiringdict>=1.1.4'],
     },
 
@@ -99,9 +97,5 @@ setup(
     package_dir = {'pylinkirc': '.'},
 
     # Executable scripts
-    scripts=["pylink-mkpasswd"],
-
-    entry_points = {
-        'console_scripts': ['pylink=pylinkirc.launcher:main'],
-    }
+    scripts=["pylink", "pylink-mkpasswd"],
 )

@@ -11,14 +11,11 @@ PyLink is an extensible, plugin-based IRC services framework written in Python. 
 
 1) a replacement for the now-defunct Janus.
 
-2) a versatile framework for developing IRC services.
+2) a versatile framework and gateway to IRC.
 
 PyLink and any bundled software are licensed under the Mozilla Public License, version 2.0 ([LICENSE.MPL2](LICENSE.MPL2)). The corresponding documentation in the [docs/](docs/) folder is licensed under the Creative Attribution-ShareAlike 4.0 International License. ([LICENSE.CC-BY-SA-4.0](LICENSE.CC-BY-SA-4.0))
 
-## Support the project
-[![Donate via PayPal](https://img.shields.io/badge/donate-paypal-50CAF2.svg)](https://www.paypal.me/jlucode)
-
-## Obtaining support
+## Support
 
 **First, MAKE SURE you've read the [FAQ](docs/faq.md)!**
 
@@ -65,7 +62,7 @@ Unofficial Ubuntu packages for PyLink are available via two PPAs for Ubuntu 14.0
 Upon installing the `pylink` package, example configuration and docs will be in `/usr/share/doc/pylink/examples` and `/usr/share/doc/pylink/docs` respectively. You can also install a local copy of the [PyLink API reference](https://pylink.github.io/) through the `pylink-doc` package.
 
 - Stable releases: [PyLink Stable PPA](https://launchpad.net/~tacocat/+archive/ubuntu/pylink)
-- Nightly builds (of the devel branch): [PyLink Nightly Builds PPA](https://launchpad.net/~tacocat/+archive/ubuntu/pylink-nightly) - Only supported on Ubuntu 16.04 and higher
+- Nightly builds (devel branch): [PyLink Nightly Builds PPA](https://launchpad.net/~tacocat/+archive/ubuntu/pylink-nightly)
 
 ## Configuration
 

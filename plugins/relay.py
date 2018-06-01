@@ -106,8 +106,7 @@ def normalize_nick(irc, netname, nick, times_tagged=0, uid=''):
         if irc.serverdata.get('relay_tag_nicks', conf.conf.get('relay', {}).get('tag_nicks', True)):
             times_tagged = 1
         else:
-            forcetag_nicks = set(conf.conf.get('relay', {}).get('forcetag_nicks', []))
-            forcetag_nicks |= set(irc.serverdata.get('relay_forcetag_nicks', []))
+            forcetag_nicks = conf.conf.get('relay', {}).get('forcetag_nicks', [])
             log.debug('(%s) relay.normalize_nick: checking if globs %s match %s.', irc.name, forcetag_nicks, nick)
             for glob in forcetag_nicks:
                 if irc.matchHost(glob, nick):
@@ -158,7 +157,7 @@ def normalize_nick(irc, netname, nick, times_tagged=0, uid=''):
         if char not in allowed_chars:
             nick = nick.replace(char, fallback_separator)
 
-    while irc.nickToUid(nick) not in (None, uid):
+    while irc.nickToUid(nick) and irc.nickToUid(nick) != uid:
         # The nick we want exists: Increase the separator length by 1 if the user was already
         # tagged, but couldn't be created due to a nick conflict. This can happen when someone
         # steals a relay user's nick.
@@ -221,8 +220,7 @@ def spawn_relay_server(irc, remoteirc):
         try:
             # ENDBURST is delayed by 3 secs on supported IRCds to prevent
             # triggering join-flood protection and the like.
-            suffix = irc.serverdata.get('relay_server_suffix', conf.conf.get('relay', {}).get('server_suffix', 'relay'))
-
+            suffix = conf.conf.get('relay', {}).get('server_suffix', 'relay')
             # Strip any leading or trailing .'s
             suffix = suffix.strip('.')
             sid = irc.proto.spawnServer('%s.%s' % (remoteirc.name, suffix),
@@ -581,7 +579,7 @@ def get_supported_umodes(irc, remoteirc, modes):
             # in the supported modes list for the TARGET network, and set that
             # mode character as the one we're setting, if it exists.
             if modechar == m:
-                if name not in WHITELISTED_UMODES:
+                if name not in whitelisted_umodes:
                     log.debug("(%s) relay.get_supported_umodes: skipping mode (%r, %r) because "
                               "it isn't a whitelisted (safe) mode for relay.",
                               irc.name, modechar, arg)
@@ -714,74 +712,22 @@ def relay_part(irc, channel, user):
             remoteirc.proto.quit(remoteuser, 'Left all shared channels.')
             del relayusers[(irc.name, user)][remoteirc.name]
 
-WHITELISTED_CMODES = {
-     'admin',
-     'adminonly',
-     'allowinvite',
-     'autoop',
-     'ban',
-     'banexception',
-     'blockcolor',
-     'blockcaps',
-     'blockhighlight',
-     'exemptchanops',
-     'filter',
-     'flood',
-     'flood_unreal',
-     'freetarget',
-     'halfop',
-     'hidequits',
-     'history',
-     'invex',
-     'inviteonly',
-     'joinflood',
-     'key',
-     'kicknorejoin',
-     'kicknorejoin_insp',
-     'largebanlist',
-     'limit',
-     'moderated',
-     'nickflood',
-     'noamsg',
-     'noctcp',
-     'noextmsg',
-     'noforwards',
-     'noinvite',
-     'nokick',
-     'noknock',
-     'nonick',
-     'nonotice',
-     'op',
-     'operonly',
-     'opmoderated',
-     'owner',
-     'private',
-     'quiet',
-     'regmoderated',
-     'regonly',
-     'repeat',
-     'repeat_insp',
-     'secret',
-     'sslonly',
-     'stripcolor',
-     'topiclock',
-     'voice'
-}
-WHITELISTED_UMODES = {
-     'bot',
-     'hidechans',
-     'hideidle',
-     'hideoper',
-     'invisible',
-     'noctcp',
-     'oper',
-     'regdeaf',
-     'stripcolor',
-     'wallops'
-}
-CLIENTBOT_WHITELISTED_CMODES = {'admin', 'ban', 'banexception', 'halfop', 'invex', 'op', 'owner', 'voice'}
-CLIENTBOT_MODESYNC_OPTIONS = ('none', 'half', 'full')
 
+whitelisted_cmodes = {'admin', 'allowinvite', 'autoop', 'ban', 'banexception',
+                      'blockcolor', 'halfop', 'invex', 'inviteonly', 'key',
+                      'limit', 'moderated', 'noctcp', 'noextmsg', 'nokick',
+                      'noknock', 'nonick', 'nonotice', 'op', 'operonly',
+                      'opmoderated', 'owner', 'private', 'regonly',
+                      'regmoderated', 'secret', 'sslonly', 'adminonly',
+                      'stripcolor', 'topiclock', 'voice', 'flood',
+                      'flood_unreal', 'joinflood', 'freetarget',
+                      'noforwards', 'noinvite'}
+whitelisted_umodes = {'bot', 'hidechans', 'hideoper', 'invisible', 'oper',
+                      'regdeaf', 'stripcolor', 'noctcp', 'wallops',
+                      'hideidle'}
+clientbot_whitelisted_cmodes = {'admin', 'ban', 'banexception',
+                                'halfop', 'invex', 'op', 'owner', 'voice'}
+modesync_options = ('none', 'half', 'full')
 def get_supported_cmodes(irc, remoteirc, channel, modes):
     """
     Filters a channel mode change to the modes supported by the target IRCd.
@@ -791,18 +737,18 @@ def get_supported_cmodes(irc, remoteirc, channel, modes):
         return []
 
     # Handle Clientbot-specific mode whitelist settings
-    whitelist = WHITELISTED_CMODES
+    whitelist = whitelisted_cmodes
     if remoteirc.protoname == 'clientbot' or irc.protoname == 'clientbot':
         modesync = conf.conf.get('relay', {}).get('clientbot_modesync', 'none').lower()
-        if modesync not in CLIENTBOT_MODESYNC_OPTIONS:
+        if modesync not in modesync_options:
             modesync = 'none'
             log.warning('relay: Bad clientbot_modesync option %s: valid values are %s',
-                        modesync, CLIENTBOT_MODESYNC_OPTIONS)
+                        modesync, modesync_options)
 
         if modesync == 'none':
             return []  # Do nothing
         elif modesync == 'half':
-            whitelist = CLIENTBOT_WHITELISTED_CMODES
+            whitelist = clientbot_whitelisted_cmodes
 
     supported_modes = []
     for modepair in modes:

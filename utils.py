@@ -350,11 +350,7 @@ class ServiceBot():
         for func in self.commands[cmd]:
             try:
                 func(irc, source, cmd_args)
-            except NotAuthorizedError as e:
-                self.reply(irc, 'Error: %s' % e)
-                log.warning('(%s) Denying access to command %r for %s; msg: %s', irc.name, cmd,
-                            irc.getHostmask(source), e)
-            except InvalidArgumentsError as e:
+            except (NotAuthorizedError, InvalidArgumentsError) as e:
                 self.reply(irc, 'Error: %s' % e)
             except Exception as e:
                 log.exception('Unhandled exception caught in command %r', cmd)

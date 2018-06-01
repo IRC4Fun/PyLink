@@ -28,15 +28,11 @@ def spawn_service(irc, source, command, args):
     # 3) The preferred nick/ident combination defined by the plugin (sbot.nick / sbot.ident)
     # 4) The literal service name.
     # settings, and then falling back to the literal service name.
-    sbconf = conf.conf.get(name, {})
-    nick = irc.serverdata.get("%s_nick" % name) or sbconf.get('nick') or sbot.nick or name
-    ident = irc.serverdata.get("%s_ident" % name) or sbconf.get('ident') or sbot.ident or name
+    nick = irc.serverdata.get("%s_nick" % name) or conf.conf.get(name, {}).get('nick') or sbot.nick or name
+    ident = irc.serverdata.get("%s_ident" % name) or conf.conf.get(name, {}).get('ident') or sbot.ident or name
 
-    # Determine host the same way as above, except fall back to server hostname.
-    host = irc.serverdata.get("%s_host" % name) or sbconf.get('host') or irc.hostname()
-
-    # Determine realname the same way as above, except fall back to pylink:realname.
-    realname = irc.serverdata.get("%s_realname" % name) or sbconf.get('realname') or conf.conf['bot']['realname']
+    # TODO: make this configurable?
+    host = irc.hostname()
 
     # Spawning service clients with these umodes where supported. servprotect usage is a
     # configuration option.
@@ -60,7 +56,7 @@ def spawn_service(irc, source, command, args):
     else:
         log.debug('(%s) spawn_service: Spawning new client %s', irc.name, nick)
         userobj = irc.proto.spawnClient(nick, ident, host, modes=modes, opertype="PyLink Service",
-                                        realname=realname, manipulatable=sbot.manipulatable)
+                                        manipulatable=sbot.manipulatable)
 
     # Store the service name in the IrcUser object for easier access.
     userobj.service = name
